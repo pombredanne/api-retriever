@@ -1,10 +1,11 @@
 import argparse
 import logging
 
-from retriever.entity import EntityConfiguration, EntityList
+from retriever.entity_configuration import EntityConfiguration
+from retriever.entity_list import EntityList
 
 # get global logger
-logger = logging.getLogger('airbnb_logger')
+logger = logging.getLogger('api-retriever_logger')
 
 
 def get_argument_parser():
@@ -77,6 +78,10 @@ def main():
     # retrieve data using API
     entities.retrieve_data()
 
+    # flatten output (if configured)
+    if config.flatten_output:
+        entities.flatten_output()
+
     if config.chained_request_name:
         # execute chained request (if configured)
         chained_entities = entities.execute_chained_request(args.config_dir)
@@ -89,6 +94,7 @@ def main():
 
         # write entities to CSV file
         entities.write_to_csv(args.output_dir, args.delimiter)
+
 
 if __name__ == '__main__':
     main()
